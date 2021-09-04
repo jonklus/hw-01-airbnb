@@ -1,7 +1,7 @@
 ---
 title: "HW 01 - Airbnb listings in NYC"
-author: "Insert your name here"
-date: "Insert date here"
+author: "Jonathan Klus"
+date: "4 September 2021"
 output: github_document
 ---
 
@@ -16,18 +16,30 @@ nycbnb = read_csv("https://urmc-bst.github.io/bst430-fall2021-site/hw_lab_instru
 
 ### Exercise 1
 
-Remove this text, and add your answer for Exercise 1 here.
+
+*How many observations (rows) does the dataset have? Instead of hard coding the number in your answer, use inline code.*
+
+```{r}
+nrow(nycbnb)
+```
+
+The data set has `r nrow(nycbnb)` observations. 
 
 ### Exercise 2
 
-Remove this text, and add your answer for Exercise 2 here.
+*Run `View(nycbnb)` in your Console to view the data in the data viewer. What does each row in the dataset represent?*
+
+Each row represents a single Airbnb property in New York City. 
 
 ### Exercise 3
 
-Remove this text, and add your answer for Exercise 3 here.
+*Create a faceted histogram where each facet represents a neighborhood and displays the distribution of Airbnb prices in that neighborhood. Think critically about whether it makes more sense to stack the facets on top of each other in a column, lay them out in a row, or wrap them around. Along with your visualisation, include your reasoning for the layout you chose for your facets.*
 
 ```{r prices-neighbourhoods}
-# remove this comment and add the code for Exercise 3 here
+ggplot(data = nycbnb, mapping = aes(x = price)) +
+  geom_histogram(binwidth = 10) +
+  facet_wrap(~ neighborhood) +  # or facet_grid...
+  theme(strip.text.x = element_text(size=5))
 ```
 
 ### Exercise 4
