@@ -44,33 +44,76 @@ ggplot(data = nycbnb, mapping = aes(x = price)) +
 
 ### Exercise 4
 
-Remove this text, and add your answer for Exercise 4 here.
+*Use a single pipeline to identity the neighborhoods with the top five median listing prices. Then, in another pipeline filter the data for these five neighborhoods and make density plots (`geom_density`) of the distributions of listing prices in these five neighborhoods. In a third pipeline calculate the minimum, mean, median, standard deviation, IQR, maximum listing price, and the number of listings, in each of these neighborhoods. Use the visualisation and the summary statistics to describe the distribution of listing prices in the neighborhoods. (Your answer will include three pipelines, one of which ends in a visualisation, and a narrative.)*
 
 ```{r top-5-median}
-# remove this comment and add the code for Exercise 4 here
+top5 = nycbnb %>%
+  dplyr::group_by(neighborhood) %>%
+  dplyr::summarize(Med_Price = median(price)) %>%
+  dplyr::arrange(desc(Med_Price)) %>%
+  head(5)
+
+top5
 ```
 
 ```{r top-5-median-plot}
-# remove this comment and add the code for Exercise 4 here
+nycbnb %>%
+  dplyr::filter(neighborhood %in% top5$neighborhood) %>%
+  ggplot2::ggplot(aes(x = price)) + 
+  ggplot2::geom_density() + 
+  ggplot2::facet_wrap(~neighborhood) +
+  ggplot2::theme_bw()
 ```
 
 ```{r top-5-median-summary-stats}
-# remove this comment and add the code for Exercise 4 here
+nycbnb %>%
+  dplyr::filter(neighborhood %in% top5$neighborhood) %>%
+  dplyr::group_by(neighborhood) %>%
+  dplyr::summarize(
+    Min = min(price),
+    Mean = mean(price),
+    Med = median(price),
+    SD = sd(price),
+    IQR = IQR(price),
+    Max = max(price)
+  )
 ```
+The distribution of Airbnb prices in these five neighborhoods was typically
+centered about approximately $200 per night, with the highest median price in
+the West Village at $221.50 per night, and the lowest median price of the five 
+in Midtown at $186.00 per night. The kernel density plots appear to show that all 
+five distributions are skewed right. The densities are also not particularly smooth,
+and the density estimate for Chelsea appears to be bimodal. Since the density estimates
+appear heavily skewed, relying on median and IQR as measures of center and spread
+are probably best since these are robust summaries. 
 
 ### Exercise 5
 
-Remove this text, and add your answer for Exercise 5 here.
+*Create a visualization that will help you compare the distribution of review scores (`review_scores_rating`) across neighborhoods. You get to decide what type of visualisation to create and there is more than one correct answer! In your answer, include a brief interpretation of how Airbnb guests rate properties in general and how the neighborhoods compare to each other in terms of their ratings.*
 
 ```{r review-scores-rating}
-# remove this comment and add the code for Exercise 5 here
+ggplot2::ggplot(nycbnb, aes(x = neighborhood, y = review_scores_rating)) +
+  ggplot2::geom_boxplot(outlier.size = 0.5) +
+  ggplot2::theme_bw() +
+  ggplot2::theme(axis.text.x = element_text(angle = 45, size = 8, vjust  = 1, hjust = 1))
 ```
+Airbnb guests appear to rate the properties where they stay quite highly. For most
+neighborhoods displayed in the side-by-side boxplots above, the 75th percentile appears to be around 4.5 or greater. There appears to be relative uniformity among
+the neighborhoods as far as center, spread, and outliers for the ratings. The notable
+exceptions to this are the Theater District, Midtown, Hell's Kitchen, Kips Bay, and Chelsea, which appear to have a longer left tails than most of the other neighborhoods, indicating that some guests left lower ratings for properties in
+these neighborhoods. 
 
 ### Exercise 6
 
+*Does there appear to be a relationship between the review scores (`review_scores_rating`) and price?  Make a plot and explain what you think might be going on.*
+
 ```{r score-vs-price}
-# remove this comment and add code for Ex 6
+ggplot2::ggplot(data = nycbnb, aes(x = review_scores_rating, y = price)) +
+  ggplot2::geom_point(size = 0.5) +
+  ggplot2::theme_bw()
 ```
+There does not appear to be a strong association between Airbnb review scores
+and prices.
 
 ### Exercise 7
 
